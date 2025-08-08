@@ -1,0 +1,7 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Sign up — Elara Go</title><link rel='stylesheet' href='/static/styles.css'></head><body>
+<div class='container main'><h1>Create your account</h1>{% if msg %}<p class='badge'>{{msg}}</p>{% endif %}
+<form method='POST' class='card' style='max-width:520px'><div class='row'>
+<input name='email' placeholder='Email'/><input name='password' type='password' placeholder='Password'/><button class='btn' type='submit'>Create account</button>
+</div><p class='muted' style='margin-top:10px'>Already have an account? <a href='/login'>Log in</a></p></form></div>
+</body></html>

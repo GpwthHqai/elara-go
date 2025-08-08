@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing — Elara Go</title>
+<link rel="stylesheet" href="/static/styles.css" />
+</head><body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><div class="logo" aria-hidden="true"></div><span>Elara Go</span></div>
+      <nav style="display:flex; gap:10px; align-items:center;">
+        <a href="/app" class="ghost">Dashboard</a>
+        <a href="/logout" class="ghost">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main">
+    <h1>Billing</h1>
+    <div class="card" style="max-width:720px">
+      <p><strong>Plan:</strong> {{ user['plan'] or 'free' }}</p>
+      {% if renewal_iso %}
+        <p><strong>Renews:</strong> {{ renewal_iso }}</p>
+      {% else %}
+        <p><strong>Renews:</strong> —</p>
+      {% endif %}
+      <form id="portalForm" method="POST" action="/billing/portal">
+        <button class="btn" type="submit">Open Customer Portal</button>
+      </form>
+      <p class="muted" style="margin-top:10px">Manage your subscription, update payment methods, or cancel from Stripe’s secure portal.</p>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('portalForm');
+    if(form){
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const res = await fetch('/billing/portal', { method:'POST' });
+        const data = await res.json();
+        if(data.url) window.location = data.url;
+        else alert('Unable to open billing portal. Check Stripe configuration.');
+      });
+    }
+  </script>
+</body></html>

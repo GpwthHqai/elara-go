@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+<meta charset='UTF-8'/><meta name='viewport' content='width=device-width, initial-scale=1'/>
+<title>Elara Go — The Ultimate Task & Activity Tracker</title>
+<link rel='stylesheet' href='/static/styles.css'/>
+<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+</head><body>
+<header><div class='container nav'>
+  <div class='brand'><div class='logo'></div><span>Elara Go</span></div>
+  <nav style='display:flex;gap:10px;align-items:center'>
+    <a href='/login' class='ghost'>Log in</a>
+    <a href='/signup' class='ghost'>Sign up</a>
+    <a href='/app' class='btn'>Open Dashboard</a>
+  </nav>
+</div></header>
+<main>
+<section class='hero container'>
+  <div>
+    <div class='eyebrow'>Time • Wellness • Habits</div>
+    <h1>Track what matters. Build habits that stick.</h1>
+    <p class='lead'>Elara Go is the ultimate task & activity tracker for busy, wellness-minded professionals. One sleek dashboard to plan your day, measure your focus, and reinforce the habits that make you feel good.</p>
+    <div class='row'>
+      <a class='btn' href='/signup'>Start Free</a>
+      <form method='POST' action='/checkout/6month'><button type='submit' class='ghost'>Start 6-Month Pro</button></form>
+    </div>
+    <div style='margin-top:12px'>
+      <span class='badge'>Private by design</span>
+      <span class='badge'>Fast & frictionless</span>
+      <span class='badge'>Wellness-first</span>
+    </div>
+  </div>
+  <div>
+    <div class='card'><strong>Connects with</strong>
+      <div style='margin-top:10px;display:flex;gap:10px;flex-wrap:wrap'>
+        <span class='badge'>Google Calendar</span><span class='badge'>Apple Health</span><span class='badge'>Fitbit</span><span class='badge'>Notion</span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class='container'>
+  <div class='sticky-cta'><div class='sticky-inner'>
+    <div class='copy'>Ready in under 60 seconds. Try Pro for 6 months and get a <strong>launch discount</strong>.</div>
+    <form method='POST' action='/checkout/6month'><button type='submit' class='cta'>Start 6-Month Pro</button></form>
+  </div></div>
+</section>
+</main>
+</body></html>

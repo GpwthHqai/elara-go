@@ -1,0 +1,6 @@
+# Environment and secret files
+.env
+__pycache__/
+*.db
+*.xlsx
+*.zip
