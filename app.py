@@ -1,7 +1,8 @@
 
 import os, sqlite3, stripe
 from flask import Flask, jsonify, request, send_file, render_template, g, redirect, url_for, session, abort
-import pandas as pd
+# pandas removed; using openpyxl instead
+from openpyxl import Workbook
 from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
