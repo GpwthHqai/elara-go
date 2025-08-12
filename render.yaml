@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
         pythonVersion: 3.11
-    buildCommand: python -m pip install -r requirements.txt
+    buildCommand: python -m ensurepip --upgrade && python -m pip install -r requirements.txt
     startCommand: python app.py
     envVars:
       - key: FLASK_SECRET

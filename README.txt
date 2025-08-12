@@ -2,7 +2,7 @@ Elara Go — Landing + Dashboard + Auth + Stripe (Checkout/Webhook/Billing Porta
 
 Run locally:
 1) python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
-2) pip install -r requirements.txt
+2) python -m ensurepip --upgrade && pip install -r requirements.txt
 3) cp .env.example .env  # add your Stripe keys and APP_BASE_URL
 4) python app.py
 - Open http://localhost:5000
