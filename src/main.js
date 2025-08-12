@@ -58,7 +58,7 @@ function createHeader() {
         <nav class="nav">
           <div class="brand">
             <div class="logo"></div>
-            <span>Zenith</span>
+            <span>Elara Go</span>
           </div>
           <div class="nav-links">
             ${state.currentView === 'landing' ? `
@@ -237,8 +237,8 @@ function createLandingPage() {
           
           <div class="pricing-card featured">
             <div class="plan-name">Pro (6 Months)</div>
-            <div class="plan-price">$72</div>
-            <div class="plan-period">$12/month • Save 40%</div>
+            <div class="plan-price">$44</div>
+            <div class="plan-period">$7.33/month • Save 44%</div>
             <ul class="plan-features">
               <li>Everything in Free</li>
               <li>Advanced analytics & insights</li>
@@ -257,7 +257,7 @@ function createLandingPage() {
           
           <div class="pricing-card">
             <div class="plan-name">Pro (Monthly)</div>
-            <div class="plan-price">$20</div>
+            <div class="plan-price">$12</div>
             <div class="plan-period">per month</div>
             <ul class="plan-features">
               <li>Everything in Free</li>
@@ -530,7 +530,7 @@ function createAuthForm(type) {
             <div class="text-center">
               <h3 style="margin-bottom: 1rem; color: var(--accent-secondary);">🎉 Welcome Bonus</h3>
               <p style="margin-bottom: 1rem; color: var(--text-secondary);">
-                New users get <strong>7 days free</strong> of Pro features to explore everything Zenith has to offer.
+                New users get <strong>7 days free</strong> of Pro features to explore everything Elara Go has to offer.
               </p>
               <div class="flex gap-sm justify-center" style="flex-wrap: wrap;">
                 <div class="feature-badge">✨ Advanced Analytics</div>
@@ -547,7 +547,7 @@ function createAuthForm(type) {
                 Want to explore first? Use our demo account to see all features in action.
               </p>
               <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.875rem;">
-                <div><strong>Email:</strong> demo@zenith.com</div>
+                <div><strong>Email:</strong> demo@elarago.com</div>
                 <div><strong>Password:</strong> demo123</div>
               </div>
             </div>
