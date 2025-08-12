@@ -14,7 +14,7 @@ APP_NAME = "Elara Go"
 DB_PATH = os.path.join(os.path.dirname(__file__), "elara.db")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
-STRIPE_PRICE_6MO = os.getenv("STRIPE_PRICE_6MO", "")
+STRIPE_PRICE_6MO = os.getenv("STRIPE_PRICE_6MO", "price_1234567890")  # Replace with actual Stripe price ID
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 APP_BASE_URL = os.getenv("APP_BASE_URL", "http://localhost:5000")
 FLASK_SECRET = os.getenv("FLASK_SECRET", "dev-secret")
@@ -254,7 +254,7 @@ def goals():
         uid = uid_or_abort()
         data = request.get_json(force=True)
         db.execute(
-            "INSERT INTO goals (user_id, goal, action_steps, progress) VALUES (?, ?, ?)",
+            "INSERT INTO goals (user_id, goal, action_steps, progress) VALUES (?, ?, ?, ?)",
             (uid, data.get("goal"), data.get("action_steps"), int(data.get("progress", 0))),
         )
         db.commit()
@@ -318,6 +318,13 @@ def summary():
 @app.route("/export")
 @login_required
 def export_excel():
+    # Import pandas here to avoid dependency issues if not installed
+    try:
+        import pandas as pd
+    except ImportError:
+        # Fallback to openpyxl-only export
+        return export_excel_openpyxl()
+    
     db = get_db()
     uid = current_user_id()
     tasks_df = pd.read_sql_query("SELECT id as ID, task as Task, project as Project, priority as Priority, due_date as 'Due Date', status as Status FROM tasks WHERE user_id=?", db, params=(uid,))
@@ -339,6 +346,45 @@ def export_excel():
         summary_df.to_excel(writer, sheet_name="Dashboard Summary", index=False)
     return send_file(out_path, as_attachment=True)
 
+def export_excel_openpyxl():
+    """Fallback export using only openpyxl"""
+    db = get_db()
+    uid = current_user_id()
+    
+    wb = Workbook()
+    
+    # Tasks sheet
+    ws_tasks = wb.active
+    ws_tasks.title = "Tasks"
+    tasks = db.execute("SELECT id, task, project, priority, due_date, status FROM tasks WHERE user_id=?", (uid,)).fetchall()
+    ws_tasks.append(["ID", "Task", "Project", "Priority", "Due Date", "Status"])
+    for task in tasks:
+        ws_tasks.append(list(task))
+    
+    # Habits sheet
+    ws_habits = wb.create_sheet("Habits")
+    habits = db.execute("SELECT habit, mon, tue, wed, thu, fri, sat, sun FROM habits WHERE user_id=?", (uid,)).fetchall()
+    ws_habits.append(["Habit", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+    for habit in habits:
+        ws_habits.append(list(habit))
+    
+    # Goals sheet
+    ws_goals = wb.create_sheet("Goals")
+    goals = db.execute("SELECT goal, action_steps, progress FROM goals WHERE user_id=?", (uid,)).fetchall()
+    ws_goals.append(["Goal", "Action Steps", "Progress %"])
+    for goal in goals:
+        ws_goals.append(list(goal))
+    
+    # Journal sheet
+    ws_journal = wb.create_sheet("Daily Journal")
+    journal = db.execute("SELECT jdate, mood, stress, gratitude, highlight, notes FROM journal WHERE user_id=?", (uid,)).fetchall()
+    ws_journal.append(["Date", "Mood", "Stress Level (1-10)", "Gratitude", "Today's Highlight", "Reflection/Notes"])
+    for entry in journal:
+        ws_journal.append(list(entry))
+    
+    out_path = os.path.join(os.path.dirname(__file__), "ElaraGo_Dashboard.xlsx")
+    wb.save(out_path)
+    return send_file(out_path, as_attachment=True)
 # -------- Stripe: Checkout + Webhook + Billing --------
 @app.route("/checkout/6month", methods=["POST"])
 @login_required

@@ -1,81 +1,280 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-<meta charset='UTF-8'/><meta name='viewport' content='width=device-width, initial-scale=1'/>
-<title>Elara Go — Dashboard</title>
-<link rel='stylesheet' href='/static/styles.css'/>
-<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
-</head><body>
-<header><div class='container nav'>
-  <div class='brand'><div class='logo'></div><span>Elara Go</span></div>
-  <nav style='display:flex;gap:10px;align-items:center'>
-    <a href='/' class='ghost'>Home</a>
-    <a href='/billing' class='ghost'>Billing</a>
-    <a href='/logout' class='ghost'>Logout</a>
-    <a href='/export' class='ghost'>Export Excel</a>
-  </nav>
-</div></header>
-<main class='container main'>
-  <div class='section-title'>
-    <h2>Today</h2>
-    <div class='row'>
-      <a class='btn' href='/integrations/calendar/connect'>Connect Calendar</a>
-      <a class='ghost' href='/integrations/health/connect'>Connect Health</a>
-      <a class='ghost' href='/export'>Export Excel</a>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'/>
+  <title>Dashboard — Elara Go</title>
+  <link rel='stylesheet' href='/static/styles.css'/>
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet'>
+</head>
+<body>
+  <header>
+    <div class='container nav'>
+      <div class='brand'>
+        <div class='logo'></div>
+        <span>Elara Go</span>
+      </div>
+      <nav class='nav-links'>
+        <a href='/' class='ghost'>Home</a>
+        <a href='/billing' class='ghost'>Billing</a>
+        <a href='/export' class='ghost'>Export</a>
+        <a href='/logout' class='ghost'>Logout</a>
+      </nav>
     </div>
-  </div>
-  <div class='kpis' id='kpis'></div>
+  </header>
 
-  <div class='section-title'><h2>Tasks</h2>
-    <div class='row'>
-      <input id='newTask' placeholder='New task...'/>
-      <input id='newProject' placeholder='Project'/>
-      <select id='newPriority'><option>Low</option><option>Medium</option><option selected>High</option></select>
-      <input id='newDue' type='date'/>
-      <select id='newStatus'><option>Not Started</option><option>In Progress</option><option>Completed</option></select>
-      <button class='btn' id='addTask'>Add</button>
+  <main class='container main'>
+    <!-- Dashboard Overview -->
+    <div class='section-title'>
+      <h2>Today's Overview</h2>
+      <div class='row'>
+        <a class='btn' href='/integrations/calendar/connect'>📅 Connect Calendar</a>
+        <a class='ghost' href='/integrations/health/connect'>⌚ Connect Health</a>
+      </div>
     </div>
-  </div>
-  <div class='card'>
-    <table id='tasksTable'><thead><tr><th>ID</th><th>Task</th><th>Project</th><th>Priority</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>
-  </div>
+    <div class='kpis' id='kpis'></div>
 
-  <div class='section-title'><h2>Habits (Weekly)</h2>
-    <div class='row'>
-      <input id='habitName' placeholder='Habit name'/>
-      <button class='btn' id='addHabit'>Add Habit</button>
+    <!-- Quick Actions -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <h3 style="margin-bottom: 1rem;">Quick Add</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary);">Task</label>
+          <input id='quickTask' placeholder='What needs to be done?' style="margin-bottom: 0.5rem;"/>
+          <button class='btn' onclick="quickAddTask()" style="width: 100%;">Add Task</button>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary);">Habit</label>
+          <input id='quickHabit' placeholder='New habit to track' style="margin-bottom: 0.5rem;"/>
+          <button class='btn' onclick="quickAddHabit()" style="width: 100%;">Add Habit</button>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary);">Mood Check-in</label>
+          <select id='quickMood' style="margin-bottom: 0.5rem;">
+            <option value="">How are you feeling?</option>
+            <option value="Energized">😄 Energized</option>
+            <option value="Focused">🎯 Focused</option>
+            <option value="Calm">😌 Calm</option>
+            <option value="Stressed">😰 Stressed</option>
+            <option value="Tired">😴 Tired</option>
+          </select>
+          <button class='btn' onclick="quickMoodCheckin()" style="width: 100%;">Log Mood</button>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class='card'>
-    <table id='habitsTable'><thead><tr><th>Habit</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th></th></tr></thead><tbody></tbody></table>
-  </div>
 
-  <div class='section-title'><h2>Goals</h2>
-    <div class='row'>
-      <input id='goalName' placeholder='Goal'/>
-      <input id='goalSteps' placeholder='Action steps'/>
-      <input id='goalProgress' type='number' min='0' max='100' value='0'/>
-      <button class='btn' id='addGoal'>Add Goal</button>
+    <!-- Tasks Section -->
+    <div class='section-title'>
+      <h2>📋 Tasks</h2>
+      <div class='row'>
+        <input id='newTask' placeholder='Task description...'/>
+        <input id='newProject' placeholder='Project'/>
+        <select id='newPriority'>
+          <option value="Low">Low Priority</option>
+          <option value="Medium">Medium Priority</option>
+          <option value="High" selected>High Priority</option>
+        </select>
+        <input id='newDue' type='date'/>
+        <select id='newStatus'>
+          <option value="Not Started">Not Started</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <button class='btn' id='addTask'>Add Task</button>
+      </div>
     </div>
-  </div>
-  <div class='card'>
-    <table id='goalsTable'><thead><tr><th>Goal</th><th>Action Steps</th><th>Progress %</th><th></th></tr></thead><tbody></tbody></table>
-  </div>
+    <div class='card'>
+      <table id='tasksTable'>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Project</th>
+            <th>Priority</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-  <div class='section-title'><h2>Daily Journal</h2>
-    <div class='row'>
-      <input id='jDate' type='date'/>
-      <input id='jMood' placeholder='Mood'/>
-      <input id='jStress' type='number' min='0' max='10' placeholder='Stress 1-10'/>
-      <input id='jGrat' placeholder='Gratitude'/>
-      <input id='jHigh' placeholder='Today\'s highlight'/>
-      <input id='jNotes' placeholder='Notes'/>
-      <button class='btn' id='addJournal'>Add Entry</button>
+    <!-- Habits Section -->
+    <div class='section-title'>
+      <h2>🎯 Habits (Weekly Tracking)</h2>
+      <div class='row'>
+        <input id='habitName' placeholder='Habit name (e.g., Morning meditation)'/>
+        <button class='btn' id='addHabit'>Add Habit</button>
+      </div>
     </div>
-  </div>
-  <div class='card'>
-    <table id='journalTable'><thead><tr><th>Date</th><th>Mood</th><th>Stress</th><th>Gratitude</th><th>Highlight</th><th>Notes</th></tr></thead><tbody></tbody></table>
-  </div>
-</main>
-<script src='/static/app.js'></script>
-</body></html>
+    <div class='card'>
+      <table id='habitsTable'>
+        <thead>
+          <tr>
+            <th>Habit</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Goals Section -->
+    <div class='section-title'>
+      <h2>🚀 Goals</h2>
+      <div class='row'>
+        <input id='goalName' placeholder='Goal description'/>
+        <input id='goalSteps' placeholder='Action steps'/>
+        <input id='goalProgress' type='number' min='0' max='100' value='0' placeholder='Progress %'/>
+        <button class='btn' id='addGoal'>Add Goal</button>
+      </div>
+    </div>
+    <div class='card'>
+      <table id='goalsTable'>
+        <thead>
+          <tr>
+            <th>Goal</th>
+            <th>Action Steps</th>
+            <th>Progress</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Mindfulness Journal -->
+    <div class='section-title'>
+      <h2>🧘 Daily Journal</h2>
+      <div class='row'>
+        <input id='jDate' type='date'/>
+        <select id='jMood'>
+          <option value="">Select mood</option>
+          <option value="Energized">😄 Energized</option>
+          <option value="Focused">🎯 Focused</option>
+          <option value="Calm">😌 Calm</option>
+          <option value="Anxious">😰 Anxious</option>
+          <option value="Tired">😴 Tired</option>
+          <option value="Motivated">💪 Motivated</option>
+        </select>
+        <input id='jStress' type='number' min='1' max='10' placeholder='Stress (1-10)'/>
+        <input id='jGrat' placeholder='What are you grateful for?'/>
+        <input id='jHigh' placeholder='Today\'s highlight'/>
+        <input id='jNotes' placeholder='Reflection notes'/>
+        <button class='btn' id='addJournal'>Add Entry</button>
+      </div>
+    </div>
+    <div class='card'>
+      <table id='journalTable'>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Mood</th>
+            <th>Stress Level</th>
+            <th>Gratitude</th>
+            <th>Highlight</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Upgrade CTA for Free Users -->
+    <div class="card" style="margin-top: 2rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%); border-color: rgba(59, 130, 246, 0.2);">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h3 style="margin-bottom: 0.5rem;">🚀 Ready to unlock your full potential?</h3>
+          <p style="margin: 0; color: var(--text-secondary);">
+            Get advanced analytics, unlimited history, and premium integrations with Pro.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <a href='/billing' class='ghost'>View Plans</a>
+          <form method='POST' action='/checkout/6month' style="display: inline;">
+            <button type='submit' class='btn btn-accent'>Upgrade to Pro</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src='/static/app.js'></script>
+  <script>
+    // Quick add functions
+    async function quickAddTask() {
+      const task = document.getElementById('quickTask').value.trim();
+      if (!task) return;
+      
+      try {
+        await fetchJSON("/api/tasks", {
+          method: "POST", 
+          body: JSON.stringify({
+            task: task,
+            project: "Quick Add",
+            priority: "Medium",
+            due_date: new Date().toISOString().split('T')[0],
+            status: "Not Started"
+          })
+        });
+        document.getElementById('quickTask').value = '';
+        loadAll();
+      } catch (error) {
+        console.error('Error adding task:', error);
+      }
+    }
+
+    async function quickAddHabit() {
+      const habit = document.getElementById('quickHabit').value.trim();
+      if (!habit) return;
+      
+      try {
+        await fetchJSON("/api/habits", {
+          method: "POST", 
+          body: JSON.stringify({habit: habit})
+        });
+        document.getElementById('quickHabit').value = '';
+        loadAll();
+      } catch (error) {
+        console.error('Error adding habit:', error);
+      }
+    }
+
+    async function quickMoodCheckin() {
+      const mood = document.getElementById('quickMood').value;
+      if (!mood) return;
+      
+      try {
+        await fetchJSON("/api/journal", {
+          method: "POST", 
+          body: JSON.stringify({
+            date: new Date().toISOString().split('T')[0],
+            mood: mood,
+            stress: 5,
+            gratitude: "Quick check-in",
+            highlight: "Mood logged",
+            notes: "Quick mood check-in"
+          })
+        });
+        document.getElementById('quickMood').value = '';
+        loadAll();
+      } catch (error) {
+        console.error('Error logging mood:', error);
+      }
+    }
+
+    // Set today's date as default
+    document.getElementById('jDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('newDue').value = new Date().toISOString().split('T')[0];
+  </script>
+</body>
+</html>
