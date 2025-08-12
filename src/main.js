@@ -90,7 +90,7 @@ function createLandingPage() {
         </div>
         <h1>Master your time.<br>Elevate your mind.</h1>
         <p class="hero-description">
-          The premium productivity and wellness platform designed for ambitious Bay Area professionals. 
+          The premium productivity and wellness platform designed for ambitious professionals. 
           Seamlessly integrate task management, habit tracking, and mindfulness practices into one elegant experience.
         </p>
         <div class="hero-actions">
